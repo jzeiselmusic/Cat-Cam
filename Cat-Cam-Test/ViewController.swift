@@ -44,6 +44,13 @@ class ViewController: UIViewController {
         button_right.tag = 3
         button_right.addTarget(self,action:#selector(buttonClicked),
                             for:.touchUpInside)
+        
+        let imageName = "Image"
+        let image = UIImage(named: imageName)
+        let imageView = UIImageView(image: image!)
+        
+        imageView.frame = CGRect(x: 100, y: 500, width: 150, height: 100)
+        view.addSubview(imageView)
     }
     
     func createButton(x: Int, y: Int, mult_x: Int, mult_y: Int) -> UIButton {
