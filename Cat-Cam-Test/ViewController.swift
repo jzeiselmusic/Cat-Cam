@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        let button_up = createButton(x: 2, y: 4, mult_x: 1, mult_y: 1)
+        let button_up = createButton(x: 2, y: 16, mult_x: 1, mult_y: 12)
         button_up.tag = 0
         button_up.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
@@ -36,7 +36,7 @@ class ViewController: UIViewController {
                             for:.touchDown)
         button_up.addTarget(self,action:#selector(buttonDeflator),
                             for:.touchUpInside)
-        let button_down = createButton(x: 2, y: 4, mult_x: 1, mult_y: 3)
+        let button_down = createButton(x: 2, y: 16, mult_x: 1, mult_y: 14)
         button_down.tag = 1
         button_down.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
                             for:.touchDown)
         button_down.addTarget(self,action:#selector(buttonDeflator),
                             for:.touchUpInside)
-        let button_left = createButton(x: 8, y: 2, mult_x: 1, mult_y: 1)
+        let button_left = createButton(x: 8, y: 16, mult_x: 2, mult_y: 13)
         button_left.tag = 2
         button_left.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
@@ -52,7 +52,7 @@ class ViewController: UIViewController {
                             for:.touchDown)
         button_left.addTarget(self,action:#selector(buttonDeflator),
                             for:.touchUpInside)
-        let button_right = createButton(x: 8, y: 2, mult_x: 7, mult_y: 1)
+        let button_right = createButton(x: 8, y: 16, mult_x: 6, mult_y: 13)
         button_right.tag = 3
         button_right.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
