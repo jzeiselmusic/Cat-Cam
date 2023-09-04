@@ -34,24 +34,32 @@ class ViewController: UIViewController {
                             for:.touchDown)
         button_up.addTarget(self,action:#selector(buttonExpander),
                             for:.touchDown)
+        button_up.addTarget(self,action:#selector(buttonDeflator),
+                            for:.touchUpInside)
         let button_down = createButton(x: 2, y: 4, mult_x: 1, mult_y: 3)
         button_down.tag = 1
         button_down.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
         button_down.addTarget(self,action:#selector(buttonExpander),
                             for:.touchDown)
+        button_down.addTarget(self,action:#selector(buttonDeflator),
+                            for:.touchUpInside)
         let button_left = createButton(x: 8, y: 2, mult_x: 1, mult_y: 1)
         button_left.tag = 2
         button_left.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
         button_left.addTarget(self,action:#selector(buttonExpander),
                             for:.touchDown)
+        button_left.addTarget(self,action:#selector(buttonDeflator),
+                            for:.touchUpInside)
         let button_right = createButton(x: 8, y: 2, mult_x: 7, mult_y: 1)
         button_right.tag = 3
         button_right.addTarget(self,action:#selector(buttonClicked),
                             for:.touchDown)
         button_right.addTarget(self,action:#selector(buttonExpander),
                             for:.touchDown)
+        button_right.addTarget(self,action:#selector(buttonDeflator),
+                            for:.touchUpInside)
         
         /*
         let imageName = "Image"
@@ -121,12 +129,14 @@ class ViewController: UIViewController {
     @IBAction func buttonExpander(_ sender: UIButton) {
         UIView.animate(withDuration: 0.1,
                        animations: {
-            sender.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
-        },
-            completion: { _ in
-            UIView.animate(withDuration: 0.3) {
-                sender.transform = CGAffineTransform.identity
-            }
+            sender.transform = CGAffineTransform(scaleX: 1.8, y: 1.8)
+        })
+    }
+    
+    @IBAction func buttonDeflator(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.5,
+                       animations: {
+            sender.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
     }
 }
