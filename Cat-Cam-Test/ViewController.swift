@@ -29,6 +29,16 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /*let rectTotalBG = RectangleView()
+        rectTotalBG.set_vals(red: 0.39, green: 0.561, blue: 0.56, alpha: 0.9)
+        rectTotalBG.frame = CGRect(x: 0, y: 0, width: 800, height: 800)
+        view.addSubview(rectTotalBG)*/
+        let rectImageBG = RectangleView()
+        rectImageBG.set_vals(red: 0.0, green: 0.698, blue: 1.0, alpha: 0.9)
+        rectImageBG.frame = CGRect(x: 0, y: 125, width: 400, height: 400)
+        view.addSubview(rectImageBG)
+        
         // Do any additional setup after loading the view.
         let button_up = createButton(x: 2, y: 16, mult_x: 1, mult_y: 12, shift_x: 0, shift_y: 0)
         button_up.tag = 0
@@ -64,7 +74,7 @@ class ViewController: UIViewController {
                             for:.touchUpInside)
         
         /* make sure left and right buttons are aligned */
-        let timer = Timer(timeInterval: 0.5, repeats: true) { _ in
+        let timer = Timer(timeInterval: 0.2, repeats: true) { _ in
             self.getImage(input: url_image)
             { image in DispatchQueue.main.async
                 {
@@ -107,7 +117,7 @@ class ViewController: UIViewController {
     
     func createConfig() -> UIButton.Configuration {
         var config: UIButton.Configuration = .filled()
-        config.baseBackgroundColor = UIColor.darkGray
+        config.baseBackgroundColor = UIColor.init(red: 0.322, green: 0.8, blue: 1.0, alpha: 0.8)
         return config
     }
     
@@ -181,3 +191,32 @@ class ViewController: UIViewController {
     }
 }
 
+class RectangleView: UIView {
+    private var red: CGFloat = 0.0
+    private var green: CGFloat = 0.0
+    private var blue: CGFloat = 0.0
+    private var alpha_0: CGFloat = 0.0
+    
+    func set_vals(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.alpha_0 = alpha
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        // Define the blue color
+        let color = UIColor.init(red: self.red, green: self.green, blue: self.blue, alpha: self.alpha_0)
+        
+        // Set the fill color to blue
+        color.setFill()
+        
+        // Create a rectangle path
+        let rectanglePath = UIBezierPath(rect: rect)
+        
+        // Fill the rectangle with the blue color
+        rectanglePath.fill()
+    }
+}
