@@ -13,6 +13,8 @@ let url_down = URL(string: "http://jakespi.local:3333/down")!
 let url_left = URL(string: "http://jakespi.local:3333/left")!
 let url_right = URL(string: "http://jakespi.local:3333/right")!
 
+let url_image = URL(string: "http://jakespi.local:3333/image")!
+
 let username = "jzeisel"
 let password = ""
 let loginString = String(format: "\(username):\(password)", username, password)
@@ -62,17 +64,27 @@ class ViewController: UIViewController {
                             for:.touchUpInside)
         
         /* make sure left and right buttons are aligned */
-        
-        
-        
-        /*
-        let imageName = "Image"
-        let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image!)
-        
-        imageView.frame = CGRect(x: 100, y: 500, width: 150, height: 100)
-        view.addSubview(imageView)
-        */
+        let timer = Timer(timeInterval: 0.5, repeats: true) { _ in
+            self.getImage(input: url_image)
+            { image in DispatchQueue.main.async
+                {
+                    if let image = image {
+                        print("got image")
+                        let imageView = UIImageView(image: image)
+                        
+                        imageView.frame = CGRect(x: 20, y: 150, width: 350, height: 350)
+                        self.view.addSubview(imageView)
+                    } else {
+                        print("error grabbing image")
+                    }
+                }
+            }
+        }
+        // Add the timer to the main run loop
+        RunLoop.main.add(timer, forMode: .default)
+
+        // Start the timer immediately
+        timer.fire()
     }
     
     func createButton(x: Int, y: Int, mult_x: Int, mult_y: Int, shift_x: Int, shift_y: Int) -> UIButton {
@@ -113,6 +125,30 @@ class ViewController: UIViewController {
 
         task.resume()
     }
+    
+    func getImage(input: URL, completion: @escaping (UIImage?) -> Void) {
+        let request = URLRequest(url: input)
+        
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                print(error)
+                completion(nil)
+            } else if let data = data {
+                //print(data.map { String(format: "%02x", $0) }.joined())
+                
+                if let image = UIImage(data: data) {
+                    completion(image)
+                } else {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        }
+        
+        task.resume()
+    }
+    
     
     @objc func buttonClicked(sender:UIButton)
     {
