@@ -29,14 +29,12 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*let rectTotalBG = RectangleView()
-        rectTotalBG.set_vals(red: 0.39, green: 0.561, blue: 0.56, alpha: 0.9)
-        rectTotalBG.frame = CGRect(x: 0, y: 0, width: 800, height: 800)
-        view.addSubview(rectTotalBG)*/
+
         let rectImageBG = RectangleView()
         rectImageBG.set_vals(red: 0.0, green: 0.698, blue: 1.0, alpha: 0.9)
-        rectImageBG.frame = CGRect(x: 0, y: 125, width: 400, height: 400)
+        let rect_width = Int(self.view.frame.size.width)
+        let rect_height = Int(self.view.frame.size.height / 2)
+        rectImageBG.frame = CGRect(x: 0, y: Int(self.view.frame.size.height/8), width: rect_width, height: rect_height)
         view.addSubview(rectImageBG)
         
         // Do any additional setup after loading the view.
@@ -73,7 +71,6 @@ class ViewController: UIViewController {
         button_right.addTarget(self,action:#selector(buttonDeflator),
                             for:.touchUpInside)
         
-        /* make sure left and right buttons are aligned */
         let timer = Timer(timeInterval: 0.2, repeats: true) { _ in
             self.getImage(input: url_image)
             { image in DispatchQueue.main.async
@@ -82,7 +79,7 @@ class ViewController: UIViewController {
                         print("got image")
                         let imageView = UIImageView(image: image)
                         
-                        imageView.frame = CGRect(x: 20, y: 150, width: 350, height: 350)
+                        imageView.frame = CGRect(x: 0 + 20, y: Int(self.view.frame.size.height/8) + 20, width: rect_width - 40, height: rect_height - 40)
                         self.view.addSubview(imageView)
                     } else {
                         print("error grabbing image")
