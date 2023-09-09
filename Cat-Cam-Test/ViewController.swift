@@ -8,12 +8,15 @@
 import UIKit
 import Foundation
 
-let url_up = URL(string: "http://76.136.200.69:3333/up")!
-let url_down = URL(string: "http://76.136.200.69:3333/down")!
-let url_left = URL(string: "http://76.136.200.69:3333/left")!
-let url_right = URL(string: "http://76.136.200.69:3333/right")!
+let ip_addr = "76.136.200.69"
+let port_addr = "3333"
+var secret_key = ""
+let url_up = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/up")!
+let url_down = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/down")!
+let url_left = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/left")!
+let url_right = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/right")!
 
-let url_image = URL(string: "http://76.136.200.69:3333/image")!
+let url_image = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/image")!
 
 let username = "jzeisel"
 let password = ""
@@ -25,11 +28,15 @@ let headers = [
     "Authorization": "Basic \(base64LoginString)"
 ]
 
-class ViewController: UIViewController {
+let passwordTextField = UITextField()
+let button_enter = UIButton(type: .system)
+
+class ViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        /* create a rectangle */
         let rectImageBG = RectangleView()
         rectImageBG.set_vals(red: 0.0, green: 0.698, blue: 1.0, alpha: 0.9)
         let rect_width = Int(self.view.frame.size.width)
@@ -37,7 +44,7 @@ class ViewController: UIViewController {
         rectImageBG.frame = CGRect(x: 0, y: Int(self.view.frame.size.height/8), width: rect_width, height: rect_height)
         view.addSubview(rectImageBG)
         
-        // Do any additional setup after loading the view.
+        /* create buttons */
         let button_up = createButton(x: 2, y: 16, mult_x: 1, mult_y: 12, shift_x: 0, shift_y: 0)
         button_up.tag = 0
         button_up.addTarget(self,action:#selector(buttonClicked),
@@ -71,6 +78,32 @@ class ViewController: UIViewController {
         button_right.addTarget(self,action:#selector(buttonDeflator),
                             for:.touchUpInside)
         
+        /* create text field to get password */
+        passwordTextField.placeholder = "Enter Password"
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.frame = CGRect(x: 60, y: (self.view.frame.size.height / 12) - 15, width: 150, height: 40)
+        passwordTextField.borderStyle = UITextField.BorderStyle.roundedRect
+        view.addSubview(passwordTextField)
+        passwordTextField.delegate = self
+        
+        
+        /* create submit button next to the get password field */
+        button_enter.setTitle("", for: .normal)
+        button_enter.layer.borderColor = CGColor.init(red: 0.322, green: 0.8, blue: 1.0, alpha: 0.8)
+        button_enter.layer.borderWidth  = 3.0
+        button_enter.frame = CGRect(x: 20, y: (self.view.frame.size.height / 12) - 10, width: 30, height: 30)
+        button_enter.tintColor = UIColor.white
+        button_enter.configuration = createConfig(type: "black")
+        self.view.addSubview(button_enter)
+        button_enter.addTarget(self,action:#selector(buttonEnterClicked), for:.touchDown)
+        button_enter.addTarget(self,action:#selector(buttonEnterUnclicked), for:.touchUpInside)
+        button_enter.addTarget(self,action:#selector(buttonSubmitted), for:.touchDown)
+        
+        /* make it so that a tap will get rid of keyboard */
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
+        
+        /* get images in a loop */
         let timer = Timer(timeInterval: 0.2, repeats: true) { _ in
             self.getImage(input: url_image)
             { image in DispatchQueue.main.async
@@ -106,15 +139,24 @@ class ViewController: UIViewController {
                                             height: button_height))
         //button.center = view.center
         button.tintColor = UIColor.white
-        button.configuration = createConfig()
+        button.configuration = createConfig(type: "blue")
+        button.layer.borderColor = UIColor.darkGray.cgColor
+        button.layer.borderWidth = 5.0
         view.addSubview(button)
         
         return button
     }
     
-    func createConfig() -> UIButton.Configuration {
+    func createConfig(type: String) -> UIButton.Configuration {
         var config: UIButton.Configuration = .filled()
-        config.baseBackgroundColor = UIColor.init(red: 0.322, green: 0.8, blue: 1.0, alpha: 0.8)
+        switch type {
+            case "blue":
+                config.baseBackgroundColor = UIColor.init(red: 0.322, green: 0.8, blue: 1.0, alpha: 0.8)
+            case "black":
+                config.baseBackgroundColor = UIColor.darkGray
+            default:
+                config.baseBackgroundColor = UIColor.darkGray
+        }
         return config
     }
     
@@ -156,6 +198,18 @@ class ViewController: UIViewController {
         task.resume()
     }
     
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == passwordTextField {
+            textField.resignFirstResponder() // Dismiss the keyboard
+            buttonSubmitted(button_enter)
+            return true
+        }
+        return false
+    }
     
     @objc func buttonClicked(sender:UIButton)
     {
@@ -185,6 +239,25 @@ class ViewController: UIViewController {
                        animations: {
             sender.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
+    }
+    
+    @IBAction func buttonEnterClicked(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.3,
+                       animations: {
+            sender.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        })
+    }
+    
+    @IBAction func buttonEnterUnclicked(_ sender: UIButton) {
+        UIView.animate(withDuration: 0.5,
+                       animations: {
+            sender.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
+        })
+    }
+    
+    @IBAction func buttonSubmitted(_ sender: UIButton) {
+        secret_key = passwordTextField.text!
+        passwordTextField.text = ""
     }
 }
 
