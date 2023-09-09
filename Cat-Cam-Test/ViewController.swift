@@ -8,12 +8,12 @@
 import UIKit
 import Foundation
 
-let url_up = URL(string: "http://jakespi.local:3333/up")!
-let url_down = URL(string: "http://jakespi.local:3333/down")!
-let url_left = URL(string: "http://jakespi.local:3333/left")!
-let url_right = URL(string: "http://jakespi.local:3333/right")!
+let url_up = URL(string: "http://76.136.200.69:3333/up")!
+let url_down = URL(string: "http://76.136.200.69:3333/down")!
+let url_left = URL(string: "http://76.136.200.69:3333/left")!
+let url_right = URL(string: "http://76.136.200.69:3333/right")!
 
-let url_image = URL(string: "http://jakespi.local:3333/image")!
+let url_image = URL(string: "http://76.136.200.69:3333/image")!
 
 let username = "jzeisel"
 let password = ""
