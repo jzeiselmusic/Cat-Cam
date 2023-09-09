@@ -11,12 +11,12 @@ import Foundation
 let ip_addr = "76.136.200.69"
 let port_addr = "3333"
 var secret_key = ""
-let url_up = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/up")!
-let url_down = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/down")!
-let url_left = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/left")!
-let url_right = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/right")!
+var url_up = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/up")!
+var url_down = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/down")!
+var url_left = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/left")!
+var url_right = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/right")!
 
-let url_image = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/image")!
+var url_image = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/image")!
 
 let username = "jzeisel"
 let password = ""
@@ -32,6 +32,8 @@ let passwordTextField = UITextField()
 let button_enter = UIButton(type: .system)
 
 class ViewController: UIViewController, UITextFieldDelegate {
+    
+    var access = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -110,6 +112,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
                 {
                     if let image = image {
                         print("got image")
+                        /* we have gained access */
+                        if self.access != true {
+                            self.access = true
+                        }
                         let imageView = UIImageView(image: image)
                         
                         imageView.frame = CGRect(x: 0 + 20, y: Int(self.view.frame.size.height/8) + 20, width: rect_width - 40, height: rect_height - 40)
@@ -256,8 +262,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func buttonSubmitted(_ sender: UIButton) {
-        secret_key = passwordTextField.text!
-        passwordTextField.text = ""
+        if self.access == false {
+            secret_key = passwordTextField.text!
+            /* update urls to reflect password change */
+            url_up = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/up")!
+            url_down = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/down")!
+            url_left = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/left")!
+            url_right = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/right")!
+            url_image = URL(string: "http://" + ip_addr + ":" + port_addr + "/" + secret_key + "/image")!
+            /* empty text field on submission */
+            passwordTextField.text = ""
+        }
     }
 }
 
