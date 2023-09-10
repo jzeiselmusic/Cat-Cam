@@ -34,6 +34,8 @@ let button_enter = UIButton(type: .system)
 class ViewController: UIViewController, UITextFieldDelegate {
     
     var access = false
+    var past_image_data: Data?
+    var present_image_data: Data?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,11 +117,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         /* we have gained access */
                         if self.access != true {
                             self.access = true
+                            /* first time through, set past saliency to present saliency */
+                            self.past_image_data = image.jpegData(compressionQuality: 1.0)
                         }
                         let imageView = UIImageView(image: image)
                         
                         imageView.frame = CGRect(x: 0 + 20, y: Int(self.view.frame.size.height/8) + 20, width: rect_width - 40, height: rect_height - 40)
                         self.view.addSubview(imageView)
+                        
+                        /* calculate movement in screen */
+                        self.present_image_data = image.jpegData(compressionQuality: 1.0)
+                        if (self.present_image_data != nil && self.past_image_data != nil) {
+                            print(self.calculateSalience(past_image: self.past_image_data!, present_image: self.present_image_data!))
+                        }
+                        
+                        self.past_image_data = self.present_image_data
+                        
                     } else {
                         print("error grabbing image")
                     }
@@ -131,6 +144,21 @@ class ViewController: UIViewController, UITextFieldDelegate {
 
         // Start the timer immediately
         timer.fire()
+    }
+    
+    func calculateSalience(past_image: Data, present_image: Data) -> Float {
+        /* input image is a JPG */
+        
+        let past_image_len = past_image.count
+        let present_image_len = present_image.count
+        
+        let length = min(past_image_len, present_image_len)
+        
+        var sum: Float = 0.0
+        for i in 0...(length-1) {
+            sum += abs(Float(past_image[i]) - Float(present_image[i]))
+        }
+        return (sum / Float(length))
     }
     
     func createButton(x: Int, y: Int, mult_x: Int, mult_y: Int, shift_x: Int, shift_y: Int) -> UIButton {
@@ -274,6 +302,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
             passwordTextField.text = ""
         }
     }
+    
+    
 }
 
 class RectangleView: UIView {
